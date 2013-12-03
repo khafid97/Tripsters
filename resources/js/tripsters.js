@@ -17,7 +17,7 @@ function testMapBox(){
 	var testUrl = "https://api.foursquare.com/v2/venues/explore" +
 	"?client_id=WJWD3JLC3ES0NUYDUOUDQS0KYMTHLNFDZVABYIFUCG0SPVQR" +
 	"&client_secret=XDULXQUQQUBBUSYAK0KUY2NC0DKDE2XMUJ2P3BMKM20AEINY" +
-	"&near=Columbia University New York" +
+	"&near=New York University" +
 	"&categoryId=4d4b7105d754a06378d81259";
 
 	$.ajax({
