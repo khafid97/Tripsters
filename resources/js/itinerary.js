@@ -104,17 +104,21 @@ function plotSearchVenues(venues){
 	          venues[i]['location']['lng']
 	        );
 	        /* Build icon for each icon */
-	        var leafletIcon = L.Icon.extend({
-			    options: {
-			        iconUrl: 'resources/leaflet/images/marker-icon.png',
-			        shadowUrl: null,
-			        iconSize: new L.Point(38, 95),
-			        shadowSize: new L.Point(68, 95),
-			        iconAnchor: new L.Point(22, 94),
-			        popupAnchor: new L.Point(-3, -76)
-			    }
-			});
-	        var icon = new leafletIcon();
+	        var icon = L.AwesomeMarkers.icon({icon: 'star',  
+	        		prefix: 'glyphicon',
+	        		markerColor: 'green'});
+	  //       var leafletIcon = L.Icon.extend({
+			//     options: {
+			//         // iconUrl: 'resources/leaflet/images/marker-icon.png',
+			//         iconUrl: '/mapbox.js/assets/images/astronaut1.png',
+			//         shadowUrl: null,
+			//         iconSize: new L.Point(38, 38),
+			//         // shadowSize: new L.Point(68, 95),
+			//         iconAnchor: new L.Point(22, 94),
+			//         popupAnchor: new L.Point(-3, -76)
+			//     }
+			// });
+	        // var icon = new leafletIcon();
 	        var marker = new L.Marker(latLng, {icon: icon})
 	          .bindPopup(venues[i]['name'], { closeButton: false })
 	          .on('mouseover', function(e) { this.openPopup(); })
@@ -210,6 +214,40 @@ function renderIt(){
 	$("#itNavDivId").empty();
 	$("#itNavDivId").append(_.template($("#itNavBar_Accordion_template").html(), {"itList" : itList}));
 
+	$(function() {
+    	$( ".sortableUL" ).sortable({
+	    	start: function(event, ui) {
+	            var start_pos = ui.item.index();
+	            ui.item.data('start_pos', start_pos);
+	        },
+	        update: function(event, ui) {
+	        	var itString = localStorage["itinerary"];
+				var itList = JSON.parse(itString);
+
+	        	var start_pos = ui.item.data('start_pos');
+            	var newpos = ui.item.index();
+
+            	var liList = ui.item.closest(".sortableUL").find("li");
+            	// need to deep copy
+            	var itListNew = $.extend(true, {}, itList);
+            	// loop through the li and store the new elements at their new positions
+            	// var newIndex = 0;
+            	for (var newIndex in liList) {
+            		if(newIndex == "length")
+            			break;
+            		var href = $(liList[newIndex]).find(".deleteVenue").attr("href");
+            		var itName = href.split("#")[1];
+            		var originalIndex = href.split("#")[2];
+            		// update the href
+            		$(liList[newIndex]).find(".deleteVenue").attr("href", "#" + itName + "#" + newIndex);
+
+            		itListNew[itName][newIndex] = itList[itName][originalIndex];
+            	}
+            	localStorage["itinerary"] = JSON.stringify(itListNew);
+        	}
+	    });
+	    $( ".sortableUL" ).disableSelection();
+	});
 	$(".panel-title a.itLink").on("click", itClicked);
 	$(".panel-title .deleteIt").on("click", deleteItClicked);
 	$(".panel-body .deleteVenue").on("click", deleteVenueClicked);

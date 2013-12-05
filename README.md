@@ -24,3 +24,10 @@ https://developer.foursquare.com/docs/explore#req=venues/categories
 
 TODO: Searching with intent
 Need to change to explore
+
+<!-- used for marker icons -->
+https://github.com/lvoogdt/Leaflet.awesome-markers
+
+<!-- used for drap drop -->
+http://jqueryui.com/sortable/
+http://api.jqueryui.com/sortable/
