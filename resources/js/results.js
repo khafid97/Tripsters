@@ -13,6 +13,16 @@ var result_template = _.template(
             		'<p> <%= phone %></p>' +
                 '<p><%= address %></p>' +
                 '<p><%= city %>, <%= state %> <%= zip %></p>' +
+                '<div class="btn-group">' +
+                '  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">' +
+                '    Add to itinerary <span class="caret"></span>' +
+                '  </button>' +
+                '  <ul class="dropdown-menu" role="menu">' +
+                '    <li><a href="#">itinerary 1</a></li>' +
+                '    <li><a href="#">itinerary 2</a></li>' +
+                '    <li><a href="#">itinerary 3</a></li>' +
+                '  </ul>' +
+                '</div>' +
             '</div>' +
           '</div>' +
         '</div>'
