@@ -83,7 +83,7 @@ function plotExploreVenues(data){
     }
 }
 
-function plotSearchVenues(venues){
+function plotSearchVenues(venues,index){
 	if(!_map)
 		_map = L.mapbox.map('map_canvas', 'rahultewari89.gec4fpdh').setView([51.505, -0.09], 13);
 
@@ -104,9 +104,17 @@ function plotSearchVenues(venues){
 	          venues[i]['location']['lng']
 	        );
 	        /* Build icon for each icon */
+
+	        if(index == i){
+	        	var icon = L.AwesomeMarkers.icon({icon: 'star',  
+	        		prefix: 'glyphicon',
+	        		markerColor: 'red'});
+	        }
+	        else{
 	        var icon = L.AwesomeMarkers.icon({icon: 'star',  
 	        		prefix: 'glyphicon',
 	        		markerColor: 'green'});
+	    	}
 	  //       var leafletIcon = L.Icon.extend({
 			//     options: {
 			//         // iconUrl: 'resources/leaflet/images/marker-icon.png',
@@ -123,6 +131,7 @@ function plotSearchVenues(venues){
 	          .bindPopup(venues[i]['name'], { closeButton: false })
 	          .on('mouseover', function(e) { this.openPopup(); })
 	          .on('mouseout', function(e) { this.closePopup(); });
+
 	        _map.addLayer(marker);
 	        latlngArray.push(marker.getLatLng());
 	        // _map.panTo(marker.getLatLng());
@@ -136,9 +145,22 @@ function plotSearchVenues(venues){
 function itClicked(){
 	var itString = localStorage["itinerary"];
 	var itList = JSON.parse(itString);
-
+	//$(this).css({ "background-color": 'brown'});
+	
+	$('.highlight').removeClass('highlight');
+    $(this).addClass('highlight');
 	var chosenIt = $(this).attr("href").split("#")[1];
-	plotSearchVenues(itList[chosenIt]);
+	plotSearchVenues(itList[chosenIt],"false");
+}
+
+
+function venueClicked(){
+	var chosenIt = $(this).attr("href").split("#")[1];
+	var venueIndex = $(this).attr("href").split("#")[2];
+	var itString = localStorage["itinerary"];
+	var itList = JSON.parse(itString);
+	console.log("venue " + venueIndex);
+	plotSearchVenues(itList[chosenIt],venueIndex);
 }
 
 function deleteItClicked(){
@@ -166,6 +188,43 @@ function deleteItClicked(){
 		});
 
 	}
+}
+
+// function called when the modal Save is clicked
+function modalSaveClick(e){
+	var itString = localStorage["itinerary"];
+	var itList = JSON.parse(itString);
+
+	var newIt = $("#newItNameId").val();
+	// show error in case mepty itinerary
+	if(newIt == "" || newIt == undefined || newIt == null){
+		$("#newItNameId").closest(".form-group").addClass("has-error");
+		$("#newItNameId").next("label")[0].style.display = "block";
+		return;
+	}
+
+	itList[newIt] = {};
+	localStorage["itinerary"] = JSON.stringify(itList);
+	renderIt();
+	$("#addItModalId").modal("hide");
+	// .removeClass("error")
+
+}
+
+// add an empty itinerary
+function addItClicked(){
+	$("#addItModalId").modal("show");
+	// bind the save click
+	$("#addItId").on("click",  modalSaveClick);
+
+	// remove error message
+	$("#newItNameId").bind("keyup", function(){
+		var text = $(this).val();
+		if(text != null && text != undefined && text != ""){
+			$(this).closest(".form-group").removeClass("has-error");
+			$(this).next("label")[0].style.display = "none";
+		}
+	});
 }
 
 function deleteVenueClicked(){
@@ -239,6 +298,7 @@ function renderIt(){
             		var itName = href.split("#")[1];
             		var originalIndex = href.split("#")[2];
             		// update the href
+            		$(liList[newIndex]).find(".venueLink").attr("href", "#" + itName + "#" + newIndex);
             		$(liList[newIndex]).find(".deleteVenue").attr("href", "#" + itName + "#" + newIndex);
 
             		itListNew[itName][newIndex] = itList[itName][originalIndex];
@@ -249,6 +309,8 @@ function renderIt(){
 	    $( ".sortableUL" ).disableSelection();
 	});
 	$(".panel-title a.itLink").on("click", itClicked);
+	$(".panel-title a.addItLink").on("click", addItClicked);
 	$(".panel-title .deleteIt").on("click", deleteItClicked);
+	$(".panel-body a.venueLink").on("click", venueClicked);
 	$(".panel-body .deleteVenue").on("click", deleteVenueClicked);
 }

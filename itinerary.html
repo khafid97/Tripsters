@@ -26,27 +26,34 @@
   </head>
   <body>
   	<!-- <div id="map" style="height: 300px;"></div> -->
+    <div class="masthead">  
+      <ul class="nav nav-pills " style="width:100%; margin-left:10%">
+        <li class="active" style="width:40%"><a href="#">Search</a></li>
+        <li style="width:40%"><a href="#">My Itineraries</a></li>
+      </ul>
+    </div>
+
     <div class="row">
     <div class="col-md-4">
       <div id="itNavDivId"></div>
     </div>
 
-    <script type="text/template" id="itNavBar_template">
+ <!--   <script type="text/template" id="itNavBar_template">
       <ul class="nav nav-pills nav-stacked">
         <% _.each(itList, function (venueList, itName) { %>
           <li class="active"><a href="#"><%= itName%></a></li>
         <% }); %>
       </ul>
-    </script>
+    </script> -->
 
     <script type="text/template" id="itNavBar_Accordion_template">
-      <div class="panel-group" id="accordion">
+      <div class="panel-group" id="accordion" style="color: blue;">
       <% _.each(itList, function (venueList, itName) { %>
-        <div class="panel panel-default">
-          <div class="panel-heading">
+        <div class="panel panel-default" >
+          <div class="panel-heading" >
             <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href=<%="#" + itName%> class="itLink">
-                <span class="glyphicon glyphicon-road"></span> <%= itName%>
+                <span class="glyphicon glyphicon-road"></span><%= itName%>
               </a>
               <a href=<%="#" + itName%> class="deleteIt" ><span class="glyphicon glyphicon-trash"></span><a>
             </h4>
@@ -55,16 +62,26 @@
             <div class="panel-body">
               <ul class="sortableUL">
               <% _.each(venueList, function (venue, index) { %>
-                <li class="ui-state-default"> <%=venue.name%>
+                <li class="ui-state-default"> 
+                <a href=<%="#" + itName + "#" + index%> class="venueLink"><%=venue.name%></a>
                 <a href=<%="#" + itName + "#" + index%> class="deleteVenue" ><span class="glyphicon glyphicon-trash"></span><a>
                 </li>
               <% }); %>
               </ul>
-            </div>
-          </div>
-        </div>
+            </div>  <!-- panel-body -->
+          </div>  <!-- panel-collapse -->
+        </div>  <!-- panel-default -->
       <% }); %>
-      </div>
+        <div class="panel panel-default" >
+          <div class="panel-heading" >
+            <h4 class="panel-title">
+              <span class="glyphicon glyphicon-road"></span>
+              <a class="addItLink">Create new itinerary</a>
+              <span class="glyphicon glyphicon-trash"></span>
+            </h4>
+          </div>
+        </div>  <!-- panel-default -->
+      </div> <!-- panel-group -->
     </script>
 
     <script type="text/template" id="deleteAlert_template">
@@ -78,7 +95,30 @@
       <div style="height: 600px;" id="map_canvas"></div>
     </div>
 
-    </div>
+    </div><!-- div-row -->
+
+    <div class="modal fade" id="addItModalId">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Create an itinerary</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Name of the new itinerary" id="newItNameId">
+                 <label class="control-label" for="newItNameId" style="display:none">Enter a name</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button id="addItId" type="button" class="btn btn-primary">Add</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
   	<script src="http://code.jquery.com/jquery.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
