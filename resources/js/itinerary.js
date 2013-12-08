@@ -1,5 +1,6 @@
 var _map;
 var _markerLayer = [];
+var _polyLayer = [];
 
 function testFourSquareApi(){
 	var testUrl = "https://api.foursquare.com/v2/venues/search" +
@@ -83,7 +84,7 @@ function plotExploreVenues(data){
     }
 }
 
-function plotSearchVenues(venues,index){
+function plotSearchVenues(venues,index, resetBound, animate){
 	if(!_map)
 		_map = L.mapbox.map('map_canvas', 'rahultewari89.gec4fpdh').setView([51.505, -0.09], 13);
 
@@ -93,6 +94,13 @@ function plotSearchVenues(venues,index){
 			_map.removeLayer(layer);
 		});
 		_markerLayer = [];
+	}
+	// clear the polylines if any
+	if(_polyLayer && _polyLayer.length != 0){
+		$.each(_polyLayer, function(index, layer){
+			_map.removeLayer(layer);
+		});
+		_polyLayer = [];
 	}
 	/* Place marker for each venue. */
 	var latlngArray = [];
@@ -115,18 +123,7 @@ function plotSearchVenues(venues,index){
 	        		prefix: 'glyphicon',
 	        		markerColor: 'green'});
 	    	}
-	  //       var leafletIcon = L.Icon.extend({
-			//     options: {
-			//         // iconUrl: 'resources/leaflet/images/marker-icon.png',
-			//         iconUrl: '/mapbox.js/assets/images/astronaut1.png',
-			//         shadowUrl: null,
-			//         iconSize: new L.Point(38, 38),
-			//         // shadowSize: new L.Point(68, 95),
-			//         iconAnchor: new L.Point(22, 94),
-			//         popupAnchor: new L.Point(-3, -76)
-			//     }
-			// });
-	        // var icon = new leafletIcon();
+
 	        var marker = new L.Marker(latLng, {icon: icon})
 	          .bindPopup(venues[i]['name'], { closeButton: false })
 	          .on('mouseover', function(e) { this.openPopup(); })
@@ -136,9 +133,60 @@ function plotSearchVenues(venues,index){
 	        latlngArray.push(marker.getLatLng());
 	        // _map.panTo(marker.getLatLng());
 	        _markerLayer.push(marker);
+	        
+
+	        // if animate, open popup now
+	        if(index == i && animate){
+	        	marker.openPopup();
+	        }
+
+	        // polyline ....
+	        if(i > 0){
+		    	var latlngs = Array();
+				//Get latlng from first marker
+				latlngs.push(_markerLayer[i-1].getLatLng());
+				//Get latlng from first marker
+				latlngs.push(_markerLayer[i].getLatLng());
+				//From documentation http://leafletjs.com/reference.html#polyline
+				// create a blue polyline from an arrays of LatLng points
+				// red in case of animate
+				var polyline;
+				if(index == i && animate)
+					polyline = L.polyline(latlngs, {color: 'red'}).addTo(_map);
+				else
+					polyline = L.polyline(latlngs, {color: 'blue'}).addTo(_map);
+				
+				_polyLayer.push(polyline);
+			}
     	}
-    	_map.fitBounds(new L.LatLngBounds(latlngArray));
+    	if(resetBound && resetBound == true)
+    		_map.fitBounds(new L.LatLngBounds(latlngArray));
 	}
+}
+
+// recursice function that animates
+function animate(it, index, length){
+	setTimeout(function () {
+        	plotSearchVenues(it, index, false, true);
+        	index++;
+        	if(index < length)
+        		animate(it, index, length);
+        	else{
+        		setTimeout(function () {
+        			plotSearchVenues(it,"false", false);
+        		}, 2000);
+        	}
+	}, 1000);
+}
+
+// IT visualization
+function runITAnimation(){
+	var chosenIt = $(this).attr("href").split("#")[1];
+
+	var itString = localStorage["itinerary"];
+	var itList = JSON.parse(itString);
+
+	animate(itList[chosenIt], 0, itList[chosenIt].length);
 }
 
 // call the plotSearchVenues with the itinerary data
@@ -150,7 +198,7 @@ function itClicked(){
 	$('.highlight').removeClass('highlight');
     $(this).addClass('highlight');
 	var chosenIt = $(this).attr("href").split("#")[1];
-	plotSearchVenues(itList[chosenIt],"false");
+	plotSearchVenues(itList[chosenIt],"false", true);
 }
 
 
@@ -205,10 +253,15 @@ function modalSaveClick(e){
 
 	itList[newIt] = {};
 	localStorage["itinerary"] = JSON.stringify(itList);
+
+	// render the new left nav
 	renderIt();
 	$("#addItModalId").modal("hide");
-	// .removeClass("error")
-
+	// expand the created IT
+	$("#" + newIt.split(" ")[0]).collapse('show');
+	// should clear the map
+	plotSearchVenues();
+	$("#newItNameId").val("")
 }
 
 // add an empty itinerary
@@ -304,6 +357,7 @@ function renderIt(){
             		itListNew[itName][newIndex] = itList[itName][originalIndex];
             	}
             	localStorage["itinerary"] = JSON.stringify(itListNew);
+            	plotSearchVenues(itListNew[itName]);
         	}
 	    });
 	    $( ".sortableUL" ).disableSelection();
@@ -311,6 +365,7 @@ function renderIt(){
 	$(".panel-title a.itLink").on("click", itClicked);
 	$(".panel-title a.addItLink").on("click", addItClicked);
 	$(".panel-title .deleteIt").on("click", deleteItClicked);
+	$(".panel-title .animateIt").on("click", runITAnimation);
 	$(".panel-body a.venueLink").on("click", venueClicked);
 	$(".panel-body .deleteVenue").on("click", deleteVenueClicked);
 }
