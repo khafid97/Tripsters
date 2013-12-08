@@ -8,7 +8,7 @@ function testFourSquareApi(){
 	$.ajax({
 	  url: testUrl
 	}).done(function(reply) {
-	  console.log(reply.response.venues);
+	  //console.log(reply.response.venues);
 	  renderResults(reply);
 	});
 }
@@ -24,7 +24,8 @@ function testMapBox(){
 	$.ajax({
 	  url: testUrl
 	}).done(function(reply) {
-		// console.log(reply);
+		 console.log(reply);
+
 	  plotVenues(reply);
 	});
 }
