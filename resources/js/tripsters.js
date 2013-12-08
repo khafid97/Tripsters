@@ -9,7 +9,7 @@ function testFourSquareApi(){
 	  url: testUrl
 	}).done(function(reply) {
 	  //console.log(reply.response.venues);
-	  renderResults(reply);
+	  renderResults(reply, "search");
 	});
 }
 
@@ -27,6 +27,8 @@ function testMapBox(){
 		 console.log(reply);
 
 	  plotVenues(reply);
+	  	  //renderResults(reply, "explore");
+
 	});
 }
 
