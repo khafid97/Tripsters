@@ -196,7 +196,7 @@ function itClicked(){
 	//$(this).css({ "background-color": 'brown'});
 	
 	$('.highlight').removeClass('highlight');
-    $(this).addClass('highlight');
+    $(this).closest(".panel-heading").addClass('highlight');
 	var chosenIt = $(this).attr("href").split("#")[1];
 	plotSearchVenues(itList[chosenIt],"false", true);
 }
@@ -269,6 +269,9 @@ function addItClicked(){
 	$("#addItModalId").modal("show");
 	// bind the save click
 	$("#addItId").on("click",  modalSaveClick);
+	// hide the error messages initially
+	$(".form-group").removeClass("has-error");
+	$(".form-group label").hide();
 
 	// remove error message
 	$("#newItNameId").bind("keyup", function(){

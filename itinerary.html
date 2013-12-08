@@ -22,14 +22,25 @@
 	      top: -6px;
 	      left: -6px;
 	      }
+        .highlight{
+          font-size: 19px;
+          font-weight: bold;
+          font-family: Georgia, serif;
+          border: 1.5px solid #cccccc;
+          border-radius: 8px;
+          -webkit-box-shadow: inset 0 50px 50px rgba(67,67,53, 0.4);
+                  box-shadow: inset 0 50px 50px rgba(67,67,53, 0.4);
+          -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+                  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+          }
   	</style>
   </head>
   <body>
   	<!-- <div id="map" style="height: 300px;"></div> -->
     <div class="masthead">  
       <ul class="nav nav-pills " style="width:100%; margin-left:10%">
-        <li class="active" style="width:40%"><a href="#">Search</a></li>
-        <li style="width:40%"><a href="#">My Itineraries</a></li>
+        <li style="width:40%"><a href="#">Search</a></li>
+        <li class="active" style="width:40%"><a href="#">My Itineraries</a></li>
       </ul>
     </div>
 
@@ -52,11 +63,15 @@
         <div class="panel panel-default" >
           <div class="panel-heading" >
             <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#accordion" href=<%="#" + itName%> class="itLink">
-                <span class="glyphicon glyphicon-road"></span><%= itName%>
-              </a>
-              <a href=<%="#" + itName%> class="deleteIt" ><span class="glyphicon glyphicon-trash"></span><a>
-              <a href=<%="#" + itName%> class="animateIt" ><span class="glyphicon glyphicon-calendar"></span><a>
+              <div align="left">
+                <a data-toggle="collapse" data-parent="#accordion" href=<%="#" + itName%> class="itLink">
+                  <span class="glyphicon glyphicon-road"></span> <%= itName%> 
+                </a>
+              </div>
+              <div align="right">
+                <a href=<%="#" + itName%> class="deleteIt" ><span class="glyphicon glyphicon-trash"></span><a>
+                <a href=<%="#" + itName%> class="animateIt" ><span class="glyphicon glyphicon-transfer"></span><a>
+              </div>
             </h4>
           </div>
           <div id=<%=itName%> class="panel-collapse collapse">
@@ -64,8 +79,10 @@
               <ul class="sortableUL">
               <% _.each(venueList, function (venue, index) { %>
                 <li class="ui-state-default"> 
-                <a href=<%="#" + itName + "#" + index%> class="venueLink"><%=venue.name%></a>
-                <a href=<%="#" + itName + "#" + index%> class="deleteVenue" ><span class="glyphicon glyphicon-trash"></span><a>
+                <h5>
+                  <a href=<%="#" + itName + "#" + index%> class="venueLink"><%=venue.name%></a>
+                  <a href=<%="#" + itName + "#" + index%> class="deleteVenue" ><span class="glyphicon glyphicon-trash"></span><a>
+                </h5>
                 </li>
               <% }); %>
               </ul>
@@ -76,9 +93,16 @@
         <div class="panel panel-default" >
           <div class="panel-heading" >
             <h4 class="panel-title">
-              <span class="glyphicon glyphicon-road"></span>
-              <a class="addItLink">Create new itinerary</a>
-              <span class="glyphicon glyphicon-trash"></span>
+              <table style="width:100%"><tr><td align="left">
+                <div>
+                <span class="glyphicon glyphicon-road"></span>
+                <a class="addItLink" style="color:#000">Create new itinerary</a>
+                </div>
+              </td><td align="right">
+                <div>
+                <span class="glyphicon glyphicon-plus"></span>
+                </div>
+              </td></tr></table>
             </h4>
           </div>
         </div>  <!-- panel-default -->
