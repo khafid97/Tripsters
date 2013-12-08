@@ -1,16 +1,5 @@
 
 
-var button =      '<div class="btn-group" id="drop">' +
-                  '  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">' +
-                  '    Add Itinerary <span class="caret"></span>' +
-                  '  </button>' +
-                  '  <div class="dropdown-menu" role="menu">' +
-                  '    <li><a href="#">Itinerary 1</a></li>' +
-                  '    <li><a href="#">Itinerary 2</a></li>' +
-                  '    <li><a href="#">Itinerary 3</a></li>' +
-                  '  </div>' +
-                  '</div>';
-
 var results_template = _.template(
           '<div class="panel panel-default">' +
           '<div class="panel-heading">' +
@@ -36,37 +25,6 @@ var results_template = _.template(
   );
 
 
-var result_template = _.template(
-        '<div class="panel panel-default">' +
-          '<div class="panel-heading">' +
-            '<h4 class="panel-title">' +
-              '<a data-toggle="collapse" data-parent="#accordion" href=<%="#" + placeId%> >' +
-                '<span class="glyphicon glyphicon-road"></span> <%= placeName%>' +
-              '</a>' +
-              '<a href=<%="#" + placeId%>><a>'+
-            '</h4>' +
-          '</div>' +
-          '<div id="<%=placeId%>" class="panel-collapse collapse">' +
-            '<div class="panel-body">' +
-            		'<p> <%= phone %></p>' +
-                '<p><%= address %></p>' +
-                '<p><%= city %>, <%= state %> <%= zip %></p>' +
-                  '<div class="btn-group" id="drop">' +
-                  '  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">' +
-                  '    Add Itinerary <span class="caret"></span>' +
-                  '  </button>' +
-                  '  <div class="dropdown-menu" role="menu">' +
-                  '    <li><a href="#">Itinerary 1</a></li>' +
-                  '    <li><a href="#">Itinerary 2</a></li>' +
-                  '    <li><a href="#">Itinerary 3</a></li>' +
-                  '  </div>' +
-                  '</div>' +
-            '</div>' +
-          '</div>' +
-        '</div>'
-	);
-
-
 
 
 function renderResults(reply, searchType){
@@ -86,29 +44,6 @@ function renderResults(reply, searchType){
 	  //var places = reply.response.venues
     //var places = reply.response.groups[0].items
 
-/**
-    if(searchType = "explore"){
-      var places = reply.response.groups[0].items
-      id = element.venue.id;
-      name = element.venue.name;
-      phone = element.venue.contact.formattedPhone;
-      address = element.venue.location.address;
-      city = element.venue.location.city;
-      state = element.venue.location.state;
-      element.venue.location.postalCode; 
-
-    } else {
-      var places = reply.response.venues
-      id = element.id;
-      name = element.name;
-      phone = element.contact.formattedPhone;
-      address = element.location.address;
-      city = element.location.city;
-      state = element.location.state;
-      postalCode = element.location.postalCode; 
-
-    } **/
-
 
     if(searchType == "explore"){
       var places = reply.response.groups[0].items
@@ -126,11 +61,14 @@ function renderResults(reply, searchType){
           })
   	  	);
   	  }); 
+      //plotExploreVenues(reply);
+
     } else if (searchType == "search") {
       console.log(reply);
         var places = reply.response.venues
+
         places.forEach(function(element) {
-        console.log(element.venue.name);
+        console.log(element.name);
         $("#accordion").append(
             results_template({
             address: element.location.address,
@@ -143,22 +81,29 @@ function renderResults(reply, searchType){
           })
         );
       });
+      //plotSearchVenues(places);
+
     }
 
+  var itString = localStorage["itinerary"];
+  var it = JSON.parse(itString);
+
+/**
       var it = {
         itinerary0: [{1: "1"}, {2:"2"}],
         itinerary1: [{1: "1"}, {2:"2"}],
         itinerary2: [{1: "1"}, {2:"2"}],
         itinerary3: [{1: "1"}, {2:"2"}],
-      };
+      };**/
 
       $("#it").each(function(){
           $(this).on("click", function(){
             console.log("clicked");
             $(".modal-body").html("");
+            var i = 0;
             for (key in it){
               console.log(key);
-              $(".modal-body").append('<a href ="#">' + key + '</a>');
+              $(".modal-body").append('<a href ="#" index="' + i++ + '">' + key + '</a>');
               $(".modal-body").append("<hr>");
 
             };
@@ -169,6 +114,7 @@ function renderResults(reply, searchType){
 
 
 };
+
 
 var _categoryList = ['food', 'drinks', 'shops', 'arts', 'sights', 'trending'];
 var _categoryNames = ['Food ', 'Nightlife ', 'Shops ', 'Arts ',
@@ -196,30 +142,32 @@ function search(e) {
   if (query != '' && query != null && query != undefined)
   {
     searchType = 'search';
-searchUrl = "https://api.foursquare.com/v2/venues/search" +
-"?client_id=WJWD3JLC3ES0NUYDUOUDQS0KYMTHLNFDZVABYIFUCG0SPVQR" +
-"&client_secret=XDULXQUQQUBBUSYAK0KUY2NC0DKDE2XMUJ2P3BMKM20AEINY" +
-"&near=" + place +
-"&query=" + query;
-if (_selCategoryId != '0')
- searchUrl += "&categoryId=" + _selCategoryId;
+    searchUrl = "https://api.foursquare.com/v2/venues/search" +
+    "?client_id=WJWD3JLC3ES0NUYDUOUDQS0KYMTHLNFDZVABYIFUCG0SPVQR" +
+    "&client_secret=XDULXQUQQUBBUSYAK0KUY2NC0DKDE2XMUJ2P3BMKM20AEINY" +
+    "&v=20130815" +
+    "&near=" + place +
+    "&query=" + query;
+    if (_selCategoryId != '0')
+     searchUrl += "&categoryId=" + _selCategoryId;
   }
   else
   {
-searchUrl = "https://api.foursquare.com/v2/venues/explore" +
-"?client_id=WJWD3JLC3ES0NUYDUOUDQS0KYMTHLNFDZVABYIFUCG0SPVQR" +
-"&client_secret=XDULXQUQQUBBUSYAK0KUY2NC0DKDE2XMUJ2P3BMKM20AEINY" +
-"&near=" + place +
-"&query=" + query;
-if (_selectedCategory != '')
-searchUrl += "&section=" + _selectedCategory;
+    searchUrl = "https://api.foursquare.com/v2/venues/explore" +
+    "?client_id=WJWD3JLC3ES0NUYDUOUDQS0KYMTHLNFDZVABYIFUCG0SPVQR" +
+    "&client_secret=XDULXQUQQUBBUSYAK0KUY2NC0DKDE2XMUJ2P3BMKM20AEINY" +
+    "&v=20130815" +
+    "&near=" + place +
+    "&query=" + query;
+    if (_selectedCategory != '')
+    searchUrl += "&section=" + _selectedCategory;
   }
   $.ajax({
- url: searchUrl
-}).done(function(reply) {
- console.log(reply);
- //RAUL: Add your code to render search results here
- renderResults(reply, searchType);
+    url: searchUrl
+    }).done(function(reply) {
+     console.log(reply);
+     //RAUL: Add your code to render search results here
+     renderResults(reply, searchType);
 });
 }
 
@@ -229,4 +177,4 @@ function categoryClicked(e) {
   _selCategoryId = _categoryIds[index];
   $('#dropdownBtn').html(_categoryNames[index] + "<b class=\"caret\"></b>");
   console.log(_selectedCategory);
-  }
+  } 
