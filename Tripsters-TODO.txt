@@ -1,0 +1,7 @@
+Add new itinerary from search page
+--Selection of results
+error on no place
+--Make contents of a result plaintext
+--Make results panel scrollable not the whole page
+--Unselect category
+Select first entry by default

@@ -1,13 +1,13 @@
-
+var places = [];
 
 var results_template = _.template(
           '<div class="panel panel-default">' +
           '<div class="panel-heading">' +
             '<h4 class="panel-title">' +
-              '<a data-toggle="collapse" data-parent="#accordion" href=<%="#" + id %>>' +
+              '<a data-toggle="collapse" data-parent="#accordion" href=<%="#" + id %> class="srchRes">' +
                 '<span class="glyphicon glyphicon-road"></span> <%= name %>' +
               '</a>' +
-              '<a href=<%="#" + id %><a>' +
+              //'<a href=<%="#" + id %><a>' +
             '</h4>' +
           '</div>' +
           '<div id="<%= id %>" class="panel-collapse collapse">' +
@@ -24,28 +24,25 @@ var results_template = _.template(
 
   );
 
-
+function srchResClicked(){
+	var index = $(this).attr("href").split("#")[1];
+	plotSearchVenues(places,index, false, false, false);
+}
 
 
 function renderResults(reply, searchType){
-
-
-	console.log(reply.response.venues);
-    var name;
+	var name;
     var id;
     var phone;
     var city;
     var state;
     var postalCode;
     var address;
-    var places;
-
-
 	  //var places = reply.response.venues
     //var places = reply.response.groups[0].items
 
 
-    if(searchType == "explore"){
+    /*if(searchType == "explore"){
       var places = reply.response.groups[0].items
   	  places.forEach(function(element) {
         console.log(element.venue.name);
@@ -63,27 +60,33 @@ function renderResults(reply, searchType){
   	  }); 
       //plotExploreVenues(reply);
 
-    } else if (searchType == "search") {
+    } else if (searchType == "search") {*/
       console.log(reply);
-        var places = reply.response.venues
+		places = reply;
 
-        places.forEach(function(element) {
-        console.log(element.name);
-        $("#accordion").append(
-            results_template({
-            address: element.location.address,
-            name: element.name,
-            id: element.id,
-            phone: element.contact.formattedPhone, 
-            city: element.location.city,
-            state: element.location.state,
-            postalCode: element.location.postalCode
-          })
-        );
-      });
-      plotSearchVenues(places, false, true);
+		places.forEach(function(element, index) {
+		console.log(element.name);
+		$("#accordion").append(
+			results_template({
+			address: element.location.address,
+			name: element.name,
+			id: index,
+			phone: element.contact.formattedPhone, 
+			city: element.location.city,
+			state: element.location.state,
+			postalCode: element.location.postalCode
+		  })
+		);
+		});
+		var resPanel = $('#results');
+		//if (resPanel.height > 600)
+		//{
+			resPanel[0].style.height = "600px";
+			resPanel[0].style.overflowY = "scroll";
+		//}
+		plotSearchVenues(places, -1, true, false, false);
 
-    }
+    //}
 
   var itString = localStorage["itinerary"];
   if (itString == undefined || itString == '')
@@ -102,13 +105,20 @@ function renderResults(reply, searchType){
               console.log(key);
               $(".modal-body").append('<a href ="#" index="' + i++ + '">' + key + '</a>');
               $(".modal-body").append("<hr>");
-
             };
+			$(".modal-body").append('<form role="search">' +
+										'<div class="form-group">' +
+											'<input id="newItName" type="text" class="form-control" placeholder="New itinerary name..."/>' +
+										'</div>' +
+										'<button type="submit" class="btn btn-primary" id="addNewIt">Add to New</button>' +
+									'</form>');
+            //$(".modal-body").append("<hr>");
 
           });
       });
   }
   
+  $(".panel-title a.srchRes").on("click", srchResClicked);
 
 /**
       var it = {
@@ -122,10 +132,10 @@ function renderResults(reply, searchType){
 };
 
 
-var _categoryList = ['food', 'drinks', 'shops', 'arts', 'sights', 'trending'];
-var _categoryNames = ['Food ', 'Nightlife ', 'Shops ', 'Arts ',
+var _categoryList = ['', 'food', 'drinks', 'shops', 'arts', 'sights', 'trending'];
+var _categoryNames = ['Category ', 'Food ', 'Nightlife ', 'Shops ', 'Arts ',
 'Sights ', 'Trending '];
-var _categoryIds = ['4d4b7105d754a06374d81259',
+var _categoryIds = ['0', '4d4b7105d754a06374d81259',
 '4d4b7105d754a06376d81259', '4d4b7105d754a06378d81259',
 '4bf58dd8d48988d127951735', '0', '0'];
 var _selectedCategory = '';
@@ -171,9 +181,18 @@ function search(e) {
   $.ajax({
     url: searchUrl
     }).done(function(reply) {
-     console.log(reply);
-     //RAUL: Add your code to render search results here
-     renderResults(reply, searchType);
+    console.log(reply);
+    //RAUL: Add your code to render search results here
+	if (searchType == "explore")
+	{
+		var venues = [];
+		var items = reply.response.groups[0].items;
+		for (var i = 0; i < items.length; i++)
+			venues.push(items[i].venue);
+	}
+	else
+		var venues = reply.response.venues;
+    renderResults(venues);
 });
 }
 

@@ -84,7 +84,9 @@ function plotExploreVenues(data){
     }
 }
 
-function plotSearchVenues(venues,index, resetBound, animate, drawLines = true){
+function plotSearchVenues(venues,index, resetBound, animate, drawLines){
+	if (drawLines == undefined)
+		drawLines = true;
 	if(!_map)
 		_map = L.mapbox.map('map_canvas', 'rahultewari89.gec4fpdh').setView([51.505, -0.09], 13);
 
@@ -136,7 +138,7 @@ function plotSearchVenues(venues,index, resetBound, animate, drawLines = true){
 	        
 
 	        // if animate, open popup now
-	        if(index == i && animate){
+	        if(index == i){// && animate){
 	        	marker.openPopup();
 	        }
 
