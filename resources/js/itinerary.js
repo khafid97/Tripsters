@@ -84,7 +84,7 @@ function plotExploreVenues(data){
     }
 }
 
-function plotSearchVenues(venues,index, resetBound, animate){
+function plotSearchVenues(venues,index, resetBound, animate, drawLines = true){
 	if(!_map)
 		_map = L.mapbox.map('map_canvas', 'rahultewari89.gec4fpdh').setView([51.505, -0.09], 13);
 
@@ -141,7 +141,7 @@ function plotSearchVenues(venues,index, resetBound, animate){
 	        }
 
 	        // polyline ....
-	        if(i > 0){
+	        if(i > 0 && drawLines){
 		    	var latlngs = Array();
 				//Get latlng from first marker
 				latlngs.push(_markerLayer[i-1].getLatLng());

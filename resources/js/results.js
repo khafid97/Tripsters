@@ -81,22 +81,19 @@ function renderResults(reply, searchType){
           })
         );
       });
-      //plotSearchVenues(places);
+      plotSearchVenues(places, false, true);
 
     }
 
   var itString = localStorage["itinerary"];
-  var it = JSON.parse(itString);
-
-/**
-      var it = {
-        itinerary0: [{1: "1"}, {2:"2"}],
-        itinerary1: [{1: "1"}, {2:"2"}],
-        itinerary2: [{1: "1"}, {2:"2"}],
-        itinerary3: [{1: "1"}, {2:"2"}],
-      };**/
-
-      $("#it").each(function(){
+  if (itString == undefined || itString == '')
+  {
+	//disable Add button
+  }
+  else
+  {
+	var it = JSON.parse(itString);
+	$("#it").each(function(){
           $(this).on("click", function(){
             console.log("clicked");
             $(".modal-body").html("");
@@ -110,7 +107,16 @@ function renderResults(reply, searchType){
 
           });
       });
+  }
+  
 
+/**
+      var it = {
+        itinerary0: [{1: "1"}, {2:"2"}],
+        itinerary1: [{1: "1"}, {2:"2"}],
+        itinerary2: [{1: "1"}, {2:"2"}],
+        itinerary3: [{1: "1"}, {2:"2"}],
+      };**/
 
 
 };
