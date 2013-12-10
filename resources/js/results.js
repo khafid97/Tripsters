@@ -110,7 +110,7 @@ function populateModal(itString){
           '<input id="newItName" type="text" class="form-control" placeholder="New itinerary name..."/>' +
           '<label class="control-label" for="newItName" style="display:none">Enter a name</label>' +
         '</div>' +
-        '<button class="btn btn-primary" id="addNewIt">Add to New</button>' +
+        '<a class="btn btn-primary" id="addNewIt">Add to New</a>' +
       '</form>');
   // $(".modal-body").append("<hr>");
 
