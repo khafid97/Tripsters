@@ -50,11 +50,83 @@ function itModalClicked(){
   $(".modal-footer .alert").show();
 }
 
+// add venue to new IT
+function addToNewItClicked(){
+  // get the new IT name
+  var newItName = $("#newItName").val();
+  if(newItName == "" || newItName == null || newItName == undefined){
+    $("#newItName").closest(".form-group").addClass("has-error");
+    $("#newItName").next("label")[0].style.display = "block";
+    return;
+  }
+
+  // get the current IT list
+  var itString = localStorage["itinerary"];
+  var itList = JSON.parse(itString);
+  // get the venue details
+  var placeIndex = $(".panel-collapse.in").attr("id")
+  var venue = places[placeIndex];
+
+  itList[newItName] = [];
+  itList[newItName].push(venue);
+  // save back to local storage
+  localStorage["itinerary"] = JSON.stringify(itList);
+
+  // need to render the modal again with the new itinerary
+  // and show the label
+  populateModal(JSON.stringify(itList));
+  $(".modal-footer .alert").text("Created " + newItName + " and added the venue successfully");
+  $(".modal-footer .alert").show();
+}
+
+// populate the modal
+function populateModal(itString){
+  var it = JSON.parse(itString);
+  // empty the modal body
+  $(".modal-body").empty();
+  for (key in it){
+    console.log(key);
+    $(".modal-body").append('<a class="itModal" href="#">' + key + '</a>');
+    $(".modal-body").append("<hr>");
+  };
+
+  $(".modal-body").append('<form role="search">' +
+        '<div class="form-group">' +
+          '<input id="newItName" type="text" class="form-control" placeholder="New itinerary name..."/>' +
+          '<label class="control-label" for="newItName" style="display:none">Enter a name</label>' +
+        '</div>' +
+        '<button type="submit" class="btn btn-primary" id="addNewIt">Add to New</button>' +
+      '</form>');
+  //$(".modal-body").append("<hr>");
+
+  $(".itModal").on("click", itModalClicked);
+  $("#addNewIt").on("click", addToNewItClicked);
+  // remove error message
+  $("#newItName").bind("keyup", function(){
+    var text = $(this).val().trim();
+    if(text != null && text != undefined && text != ""){
+      $(this).closest(".form-group").removeClass("has-error");
+      $(this).next("label")[0].style.display = "none";
+    }
+  });
+
+  
+  // $(".addToIt").each(function(){
+  //   $(this).on("click", function(){
+  //     console.log("clicked");
+  //     $(".modal-body").html("");
+  //     var i = 0;
+      
+  //   });
+  // });
+}
+
 function renderResults(reply, searchType){
 
+  // empty the left nav
   $("#accordion").empty();
 
-	var name;
+	 var name;
     var id;
     var phone;
     var city;
@@ -126,29 +198,7 @@ function renderResults(reply, searchType){
   }
   else
   {
-	var it = JSON.parse(itString);
-	$(".addToIt").each(function(){
-          $(this).on("click", function(){
-            console.log("clicked");
-            $(".modal-body").html("");
-            var i = 0;
-            for (key in it){
-              console.log(key);
-              $(".modal-body").append('<a class="itModal" href="#" index="' + i++ + '">' + key + '</a>');
-              $(".modal-body").append("<hr>");
-            };
-            
-			      $(".modal-body").append('<form role="search">' +
-										'<div class="form-group">' +
-											'<input id="newItName" type="text" class="form-control" placeholder="New itinerary name..."/>' +
-										'</div>' +
-										'<button type="submit" class="btn btn-primary" id="addNewIt">Add to New</button>' +
-									'</form>');
-            //$(".modal-body").append("<hr>");
-
-            $(".itModal").on("click", itModalClicked);
-          });
-      });
+	 populateModal(itString);
   }
   
   // clicks the search results on the left

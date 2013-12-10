@@ -126,8 +126,13 @@ function plotSearchVenues(venues,index, resetBound, animate, drawLines){
 	        		markerColor: 'green'});
 	    	}
 
+	    	var markerHTML = "<b>" + venues[i]['name'] + "</b><br/>";
+	    	markerHTML += venues[i]['location']['address'] + "<br/>";
+	    	markerHTML += venues[i]['location']['city'] + "<br/>";
+	    	markerHTML += venues[i]['location']['postalCode'] + "<br/>";
+
 	        var marker = new L.Marker(latLng, {icon: icon})
-	          .bindPopup(venues[i]['name'], { closeButton: false })
+	          .bindPopup(markerHTML, { closeButton: false })
 	          .on('mouseover', function(e) { this.openPopup(); })
 	          .on('mouseout', function(e) { this.closePopup(); });
 
@@ -335,6 +340,9 @@ function renderIt(){
 	// });
 	$("#itNavDivId").empty();
 	$("#itNavDivId").append(_.template($("#itNavBar_Accordion_template").html(), {"itList" : itList}));
+	// make the div scrollable
+	$("#itNavDivId")[0].style.height = "600px";
+	$("#itNavDivId")[0].style.overflowY = "scroll";
 
 	$(function() {
     	$( ".sortableUL" ).sortable({
@@ -378,4 +386,7 @@ function renderIt(){
 	$(".panel-title .animateIt").on("click", runITAnimation);
 	$(".panel-body a.venueLink").on("click", venueClicked);
 	$(".panel-body .deleteVenue").on("click", deleteVenueClicked);
+
+	// trigger the click of the first itinerary
+	$(".panel-title a.itLink")[0].click();
 }
