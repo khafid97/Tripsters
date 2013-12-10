@@ -64,24 +64,23 @@
           <div class="panel-heading" >
             <h4 class="panel-title">
               <div align="left">
-                <a data-toggle="collapse" data-parent="#accordion" href=<%="#" + itName.replace(/%/g, " ")%> itId=<%="#" + itName%> class="itLink">
-                  <span class="glyphicon glyphicon-road"></span> <%= itName.replace(/%/g, " ")%> 
-                </a>
+                <a data-toggle="collapse" data-parent="#accordion" href=<%="#" + "id" + itName.replace(/:/g, "")%> itId=<%="#" + itName%> class="itLink">
+                  <span class="glyphicon glyphicon-road"></span> <%= itName.replace(/:/g, " ")%></a>
               </div>
               <div align="right">
-                <a itId=<%="#" + itName%> class="deleteIt" ><span class="glyphicon glyphicon-trash"></span><a>
-                <a itId=<%="#" + itName%> class="animateIt" ><span class="glyphicon glyphicon-transfer"></span><a>
+                <a itId=<%="#" + itName%> class="deleteIt" ><span class="glyphicon glyphicon-trash"></span></a>
+                <a itId=<%="#" + itName%> class="animateIt" ><span class="glyphicon glyphicon-transfer"></span></a>
               </div>
             </h4>
           </div>
-          <div id=<%=itName.replace(/%/g, " ")%> class="panel-collapse collapse">
+          <div id=<%="id" + itName.replace(/:/g, "")%> class="panel-collapse collapse">
             <div class="panel-body">
               <ul class="sortableUL">
               <% _.each(venueList, function (venue, index) { %>
                 <li class="ui-state-default"> 
                 <h5>
                   <a itId=<%="#" + itName + "#" + index%> class="venueLink"><%=venue.name%></a>
-                  <a itId=<%="#" + itName + "#" + index%> class="deleteVenue" ><span class="glyphicon glyphicon-trash"></span><a>
+                  <a itId=<%="#" + itName + "#" + index%> class="deleteVenue" ><span class="glyphicon glyphicon-trash"></span></a>
                 </h5>
                 </li>
               <% }); %>
@@ -152,6 +151,7 @@
     <script src="resources/leaflet/leaflet.js"></script>
     <script src='http://api.tiles.mapbox.com/mapbox.js/v1.5.0/mapbox.js'></script>
     <script src="resources/js/leaflet.awesome-markers.js"></script>
+    <script src="resources/js/tripsters.js"></script>
     <script src="resources/js/itinerary.js"></script>
     <script>
       $(function (){

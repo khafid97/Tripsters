@@ -1,3 +1,7 @@
+var _map;
+var _markerLayer = [];
+var _polyLayer = [];
+
 function testFourSquareApi(){
 	var testUrl = "https://api.foursquare.com/v2/venues/search" +
 	"?client_id=WJWD3JLC3ES0NUYDUOUDQS0KYMTHLNFDZVABYIFUCG0SPVQR" +
@@ -73,4 +77,94 @@ function plotVenues(data){
         map.addLayer(marker);
         map.panTo(marker.getLatLng())
     }
+}
+
+function plotSearchVenues(venues,index, resetBound, animate, drawLines){
+	if (drawLines == undefined)
+		drawLines = true;
+	if(!_map)
+		_map = L.mapbox.map('map_canvas', 'rahultewari89.gec4fpdh').setView([51.505, -0.09], 13);
+
+	// clear the markers if any
+	if(_markerLayer && _markerLayer.length != 0){
+		$.each(_markerLayer, function(index, layer){
+			_map.removeLayer(layer);
+		});
+		_markerLayer = [];
+	}
+	// clear the polylines if any
+	if(_polyLayer && _polyLayer.length != 0){
+		$.each(_polyLayer, function(index, layer){
+			_map.removeLayer(layer);
+		});
+		_polyLayer = [];
+	}
+	/* Place marker for each venue. */
+	var latlngArray = [];
+	if(venues && venues.length > 0){
+    	for (var i = 0; i < venues.length; i++) {
+	        /* Get marker's location */
+	        var latLng = new L.LatLng(
+	          venues[i]['location']['lat'],
+	          venues[i]['location']['lng']
+	        );
+	        /* Build icon for each icon */
+
+	        if(index == i){
+	        	var icon = L.AwesomeMarkers.icon({icon: 'star',  
+	        		prefix: 'glyphicon',
+	        		markerColor: 'red'});
+	        }
+	        else{
+	        var icon = L.AwesomeMarkers.icon({icon: 'star',  
+	        		prefix: 'glyphicon',
+	        		markerColor: 'green'});
+	    	}
+
+	    	var markerHTML = "<b>" + venues[i]['name'] + "</b><br/>";
+	    	if(venues[i]['location']['address'] != "" && venues[i]['location']['address'] != " " && venues[i]['location']['address'] != null)
+	    		markerHTML += venues[i]['location']['address'] + "<br/>";
+	    	if(venues[i]['location']['city'] != "" && venues[i]['location']['city'] != " " && venues[i]['location']['city'] != null)
+	    		markerHTML += venues[i]['location']['city'] + "<br/>";
+	    	if(venues[i]['location']['postalCode'] != "" && venues[i]['location']['postalCode'] != " " && venues[i]['location']['postalCode'] != null)
+	    		markerHTML += venues[i]['location']['postalCode'] + "<br/>";
+
+	        var marker = new L.Marker(latLng, {icon: icon})
+	          .bindPopup(markerHTML, { closeButton: false })
+	          .on('mouseover', function(e) { this.openPopup(); })
+	          .on('mouseout', function(e) { this.closePopup(); });
+
+	        _map.addLayer(marker);
+	        latlngArray.push(marker.getLatLng());
+	        // _map.panTo(marker.getLatLng());
+	        _markerLayer.push(marker);
+	        
+
+	        // if animate, open popup now
+	        if(index == i){// && animate){
+	        	marker.openPopup();
+	        }
+
+	        // polyline ....
+	        if(i > 0 && drawLines){
+		    	var latlngs = Array();
+				//Get latlng from first marker
+				latlngs.push(_markerLayer[i-1].getLatLng());
+				//Get latlng from first marker
+				latlngs.push(_markerLayer[i].getLatLng());
+				//From documentation http://leafletjs.com/reference.html#polyline
+				// create a blue polyline from an arrays of LatLng points
+				// red in case of animate
+				var polyline;
+				if(index == i && animate)
+					polyline = L.polyline(latlngs, {color: 'red'}).addTo(_map);
+				else
+					polyline = L.polyline(latlngs, {color: 'blue'}).addTo(_map);
+				
+				_polyLayer.push(polyline);
+			}
+    	}
+    	if(resetBound && resetBound == true)
+    		_map.fitBounds(new L.LatLngBounds(latlngArray));
+	}
 }

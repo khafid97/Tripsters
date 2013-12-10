@@ -44,7 +44,7 @@ function itModalClicked(){
   var itString = localStorage["itinerary"];
   var itList = JSON.parse(itString);
   // add to the required IT, will add duplicates right now
-  itList[itName.replace(/ /g, "%")].push(venue);
+  itList[itName.replace(/ /g, ":")].push(venue);
   // save back to local storage
   localStorage["itinerary"] = JSON.stringify(itList);
 
@@ -65,13 +65,15 @@ function addToNewItClicked(){
 
   // get the current IT list
   var itString = localStorage["itinerary"];
-  var itList = JSON.parse(itString);
+  var itList = {};
+  if (itString != undefined && itString != '')
+    itList = JSON.parse(itString);
   // get the venue details
   var placeIndex = $(".panel-collapse.in").attr("id")
   var venue = places[placeIndex];
 
   // replace the spaces
-  var newItMod = newItName.replace(/ /g, "%");
+  var newItMod = newItName.replace(/ /g, ":");
   itList[newItMod] = [];
   itList[newItMod].push(venue);
   // save back to local storage
@@ -92,11 +94,15 @@ function populateModal(itString){
   }
   // empty the modal body
 
+  // empty the modal and hide the message
   $(".modal-body").empty();
+  $(".modal-footer .alert").hide();
+
+  $(".modal-body").append('<div class="itModalDiv" style="max-height:300px;overflow-y:scroll;" ></div>');
   for (key in it){
     console.log(key);
-    $(".modal-body").append('<a class="itModal" href="#">' + key.replace(/%/g, " ") + '</a>');
-    $(".modal-body").append("<hr>");
+    $(".itModalDiv").append('<a class="itModal" href="#">' + key.replace(/:/g, " ") + '</a>');
+    $(".itModalDiv").append("<hr>");
   };
 
   $(".modal-body").append('<form role="search">' +
@@ -104,9 +110,9 @@ function populateModal(itString){
           '<input id="newItName" type="text" class="form-control" placeholder="New itinerary name..."/>' +
           '<label class="control-label" for="newItName" style="display:none">Enter a name</label>' +
         '</div>' +
-        '<button type="submit" class="btn btn-primary" id="addNewIt">Add to New</button>' +
+        '<button class="btn btn-primary" id="addNewIt">Add to New</button>' +
       '</form>');
-  //$(".modal-body").append("<hr>");
+  // $(".modal-body").append("<hr>");
 
   $(".itModal").on("click", itModalClicked);
   $("#addNewIt").on("click", addToNewItClicked);
@@ -191,8 +197,8 @@ function renderResults(reply, searchType){
 }
   $(".addToIt").each(function(){
      $(this).on("click", function(){
+      var itString = localStorage["itinerary"];
       populateModal(itString);
-
     });
   });
 
