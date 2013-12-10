@@ -15,7 +15,7 @@ var results_template = _.template(
                 '<p> <%= phone %></p>' +
                 '<p> <%= address %></p>' +
                 '<p> <%= city %>, <%= state %> <%= postalCode %></p>' +
-                '<button class="btn btn-primary btn-lg" id="it"  data-toggle="modal" data-target="#myModal">' +
+                '<button class="btn btn-primary btn-lg addToIt" id="it"  data-toggle="modal" data-target="#myModal">' +
                 '  Add to Itinerary' + 
                 '</button>' +
             '</div>' +
@@ -29,6 +29,26 @@ function srchResClicked(){
 	plotSearchVenues(places,index, false, false, false);
 }
 
+// when a IT is clicked in the modal
+function itModalClicked(){
+  // get the IT name
+  var itName = $(this).text();
+  // get the venue details
+  var placeIndex = $(".panel-collapse.in").attr("id")
+  var venue = places[placeIndex];
+
+  // get the current IT list
+  var itString = localStorage["itinerary"];
+  var itList = JSON.parse(itString);
+  // add to the required IT, will add duplicates right now
+  itList[itName].push(venue);
+  // save back to local storage
+  localStorage["itinerary"] = JSON.stringify(itList);
+
+  // show success message
+  $(".modal-footer .alert").text("Added successfully to " + itName);
+  $(".modal-footer .alert").show();
+}
 
 function renderResults(reply, searchType){
 	var name;
@@ -96,17 +116,17 @@ function renderResults(reply, searchType){
   else
   {
 	var it = JSON.parse(itString);
-	$("#it").each(function(){
+	$(".addToIt").each(function(){
           $(this).on("click", function(){
             console.log("clicked");
             $(".modal-body").html("");
             var i = 0;
             for (key in it){
               console.log(key);
-              $(".modal-body").append('<a href ="#" index="' + i++ + '">' + key + '</a>');
+              $(".modal-body").append('<a class="itModal" href="#" index="' + i++ + '">' + key + '</a>');
               $(".modal-body").append("<hr>");
             };
-			$(".modal-body").append('<form role="search">' +
+			     $(".modal-body").append('<form role="search">' +
 										'<div class="form-group">' +
 											'<input id="newItName" type="text" class="form-control" placeholder="New itinerary name..."/>' +
 										'</div>' +
@@ -114,10 +134,12 @@ function renderResults(reply, searchType){
 									'</form>');
             //$(".modal-body").append("<hr>");
 
+            $(".itModal").on("click", itModalClicked);
           });
       });
   }
   
+  // clicks the search results on the left
   $(".panel-title a.srchRes").on("click", srchResClicked);
 
 /**
@@ -154,6 +176,21 @@ function initClickBindings() {
 function search(e) {
   var query = $('#query').val().trim();
   var place = $('#place').val().trim();
+  // check for empty places
+  if(place == "" || place == null || place == undefined){
+    $("#place").closest(".form-group").addClass("has-error");
+    $("#place").next("label")[0].style.display = "block";
+    // remove error message
+    $("#place").bind("keyup", function(){
+      var text = $(this).val().trim();
+      if(text != null && text != undefined && text != ""){
+        $(this).closest(".form-group").removeClass("has-error");
+        $(this).next("label")[0].style.display = "none";
+      }
+    });
+    return;
+  }
+
   var searchType = 'explore';
   if (query != '' && query != null && query != undefined)
   {
