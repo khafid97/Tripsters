@@ -12,8 +12,11 @@ var results_template = _.template(
           '</div>' +
           '<div id="<%= id %>" class="panel-collapse collapse">' +
             '<div class="panel-body" >' +
+            // if(phone && phone != "")
                 '<p> <%= phone %></p>' +
+              // if(address && address != "")
                 '<p> <%= address %></p>' +
+              // if(city && city != "" || state && state != "" || postalCode && postalCode != "")
                 '<p> <%= city %>, <%= state %> <%= postalCode %></p>' +
                 '<button class="btn btn-primary btn-lg addToIt" id="it"  data-toggle="modal" data-target="#myModal">' +
                 '  Add to Itinerary' + 
@@ -41,7 +44,7 @@ function itModalClicked(){
   var itString = localStorage["itinerary"];
   var itList = JSON.parse(itString);
   // add to the required IT, will add duplicates right now
-  itList[itName].push(venue);
+  itList[itName.replace(/ /g, "%")].push(venue);
   // save back to local storage
   localStorage["itinerary"] = JSON.stringify(itList);
 
@@ -67,8 +70,10 @@ function addToNewItClicked(){
   var placeIndex = $(".panel-collapse.in").attr("id")
   var venue = places[placeIndex];
 
-  itList[newItName] = [];
-  itList[newItName].push(venue);
+  // replace the spaces
+  var newItMod = newItName.replace(/ /g, "%");
+  itList[newItMod] = [];
+  itList[newItMod].push(venue);
   // save back to local storage
   localStorage["itinerary"] = JSON.stringify(itList);
 
@@ -86,7 +91,7 @@ function populateModal(itString){
   $(".modal-body").empty();
   for (key in it){
     console.log(key);
-    $(".modal-body").append('<a class="itModal" href="#">' + key + '</a>');
+    $(".modal-body").append('<a class="itModal" href="#">' + key.replace(/%/g, " ") + '</a>');
     $(".modal-body").append("<hr>");
   };
 

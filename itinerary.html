@@ -39,7 +39,7 @@
   	<!-- <div id="map" style="height: 300px;"></div> -->
     <div class="masthead">  
       <ul class="nav nav-pills " style="width:100%; margin-left:10%">
-        <li style="width:40%" align="center"><a href="index.html">Search</a></li>
+        <li style="width:40%" align="center"><a href="index.html" >Search</a></li>
         <li class="active" style="width:40%" align="center"><a href="#">My Itineraries</a></li>
       </ul>
     </div>
@@ -64,7 +64,7 @@
           <div class="panel-heading" >
             <h4 class="panel-title">
               <div align="left">
-                <a data-toggle="collapse" data-parent="#accordion" itId=<%="#" + itName%> class="itLink">
+                <a data-toggle="collapse" data-parent="#accordion" href=<%="#" + itName.replace(/%/g, " ")%> itId=<%="#" + itName%> class="itLink">
                   <span class="glyphicon glyphicon-road"></span> <%= itName.replace(/%/g, " ")%> 
                 </a>
               </div>
@@ -74,7 +74,7 @@
               </div>
             </h4>
           </div>
-          <div id=<%=itName%> class="panel-collapse collapse">
+          <div id=<%=itName.replace(/%/g, " ")%> class="panel-collapse collapse">
             <div class="panel-body">
               <ul class="sortableUL">
               <% _.each(venueList, function (venue, index) { %>

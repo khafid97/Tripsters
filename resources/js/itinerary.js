@@ -127,9 +127,12 @@ function plotSearchVenues(venues,index, resetBound, animate, drawLines){
 	    	}
 
 	    	var markerHTML = "<b>" + venues[i]['name'] + "</b><br/>";
-	    	markerHTML += venues[i]['location']['address'] + "<br/>";
-	    	markerHTML += venues[i]['location']['city'] + "<br/>";
-	    	markerHTML += venues[i]['location']['postalCode'] + "<br/>";
+	    	if(venues[i]['location']['address'] != "" && venues[i]['location']['address'] != " " && venues[i]['location']['address'] != null)
+	    		markerHTML += venues[i]['location']['address'] + "<br/>";
+	    	if(venues[i]['location']['city'] != "" && venues[i]['location']['city'] != " " && venues[i]['location']['city'] != null)
+	    		markerHTML += venues[i]['location']['city'] + "<br/>";
+	    	if(venues[i]['location']['postalCode'] != "" && venues[i]['location']['postalCode'] != " " && venues[i]['location']['postalCode'] != null)
+	    		markerHTML += venues[i]['location']['postalCode'] + "<br/>";
 
 	        var marker = new L.Marker(latLng, {icon: icon})
 	          .bindPopup(markerHTML, { closeButton: false })
