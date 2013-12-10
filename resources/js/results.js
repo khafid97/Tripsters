@@ -85,19 +85,20 @@ function renderResults(reply, searchType){
 		places = reply;
 
 		places.forEach(function(element, index) {
-		console.log(element.name);
-		$("#accordion").append(
-			results_template({
-			address: element.location.address,
-			name: element.name,
-			id: index,
-			phone: element.contact.formattedPhone, 
-			city: element.location.city,
-			state: element.location.state,
-			postalCode: element.location.postalCode
-		  })
-		);
+		  console.log(element.name);
+  		$("#accordion").append(
+  			results_template({
+  			address: element.location.address,
+  			name: element.name,
+  			id: index,
+  			phone: element.contact.formattedPhone, 
+  			city: element.location.city,
+  			state: element.location.state,
+  			postalCode: element.location.postalCode
+  		  })
+  		);
 		});
+
 		var resPanel = $('#results');
 		//if (resPanel.height > 600)
 		//{
@@ -105,6 +106,13 @@ function renderResults(reply, searchType){
 			resPanel[0].style.overflowY = "scroll";
 		//}
 		plotSearchVenues(places, -1, true, false, false);
+
+
+    //Opens first result
+    $('a[href="#0"]').removeClass("collapsed");
+    $('#0').addClass("in");    
+    var index = "0";//"#0".split("#")[1];
+    plotSearchVenues(places,index, false, false, false);
 
     //}
 
@@ -126,7 +134,8 @@ function renderResults(reply, searchType){
               $(".modal-body").append('<a class="itModal" href="#" index="' + i++ + '">' + key + '</a>');
               $(".modal-body").append("<hr>");
             };
-			     $(".modal-body").append('<form role="search">' +
+            
+			      $(".modal-body").append('<form role="search">' +
 										'<div class="form-group">' +
 											'<input id="newItName" type="text" class="form-control" placeholder="New itinerary name..."/>' +
 										'</div>' +
