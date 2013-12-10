@@ -268,7 +268,7 @@ function modalSaveClick(e){
 		return;
 	}
 
-	itList[newIt] = {};
+	itList[newIt] = [];
 	localStorage["itinerary"] = JSON.stringify(itList);
 
 	// render the new left nav

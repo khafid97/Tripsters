@@ -86,8 +86,12 @@ function addToNewItClicked(){
 
 // populate the modal
 function populateModal(itString){
-  var it = JSON.parse(itString);
+  var it = {};
+  if(itString != undefined && itString != ""){
+    it = JSON.parse(itString);
+  }
   // empty the modal body
+
   $(".modal-body").empty();
   for (key in it){
     console.log(key);
@@ -116,14 +120,6 @@ function populateModal(itString){
   });
 
   
-  // $(".addToIt").each(function(){
-  //   $(this).on("click", function(){
-  //     console.log("clicked");
-  //     $(".modal-body").html("");
-  //     var i = 0;
-      
-  //   });
-  // });
 }
 
 function renderResults(reply, searchType){
@@ -193,6 +189,12 @@ function renderResults(reply, searchType){
     $('#nores')[0].style.display = 'block';
 
 }
+  $(".addToIt").each(function(){
+     $(this).on("click", function(){
+      populateModal(itString);
+
+    });
+  });
 
 };
 
