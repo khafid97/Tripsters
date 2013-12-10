@@ -125,93 +125,69 @@ function renderResults(reply, searchType){
 
   // empty the left nav
   $("#accordion").empty();
+  $('#nores')[0].style.display = 'none';
+  if(reply && reply.length > 0){
 
-	 var name;
-    var id;
-    var phone;
-    var city;
-    var state;
-    var postalCode;
-    var address;
-	  //var places = reply.response.venues
-    //var places = reply.response.groups[0].items
+  	 var name;
+      var id;
+      var phone;
+      var city;
+      var state;
+      var postalCode;
+      var address;
 
+        console.log(reply);
+  		places = reply;
 
-    /*if(searchType == "explore"){
-      var places = reply.response.groups[0].items
-  	  places.forEach(function(element) {
-        console.log(element.venue.name);
-  	  	$("#accordion").append(
-            results_template({
-            address: element.venue.location.address,
-            name: element.venue.name,
-            id: element.venue.id,
-            phone: element.venue.contact.formattedPhone, 
-            city: element.venue.location.city,
-            state: element.venue.location.state,
-            postalCode: element.venue.location.postalCode
-          })
-  	  	);
-  	  }); 
-      //plotExploreVenues(reply);
+  		places.forEach(function(element, index) {
+  		  console.log(element.name);
+    		$("#accordion").append(
+    			results_template({
+    			address: element.location.address,
+    			name: element.name,
+    			id: index,
+    			phone: element.contact.formattedPhone, 
+    			city: element.location.city,
+    			state: element.location.state,
+    			postalCode: element.location.postalCode
+    		  })
+    		);
+  		});
 
-    } else if (searchType == "search") {*/
-      console.log(reply);
-		places = reply;
-
-		places.forEach(function(element, index) {
-		  console.log(element.name);
-  		$("#accordion").append(
-  			results_template({
-  			address: element.location.address,
-  			name: element.name,
-  			id: index,
-  			phone: element.contact.formattedPhone, 
-  			city: element.location.city,
-  			state: element.location.state,
-  			postalCode: element.location.postalCode
-  		  })
-  		);
-		});
-
-		var resPanel = $('#results');
-		//if (resPanel.height > 600)
-		//{
-			resPanel[0].style.height = "600px";
-			resPanel[0].style.overflowY = "scroll";
-		//}
-		plotSearchVenues(places, -1, true, false, false);
+  		var resPanel = $('#results');
+  		//if (resPanel.height > 600)
+  		//{
+  			resPanel[0].style.height = "600px";
+  			resPanel[0].style.overflowY = "scroll";
+  		//}
+  		plotSearchVenues(places, -1, true, false, false);
 
 
-    //Opens first result
-    $('a[href="#0"]').removeClass("collapsed");
-    $('#0').addClass("in");    
-    var index = "0";//"#0".split("#")[1];
-    plotSearchVenues(places,index, false, false, false);
+      //Opens first result
+      $('a[href="#0"]').removeClass("collapsed");
+      $('#0').addClass("in");    
+      var index = "0";//"#0".split("#")[1];
+      plotSearchVenues(places,index, false, false, false);
 
-    //}
+      //}
 
-  var itString = localStorage["itinerary"];
-  if (itString == undefined || itString == '')
-  {
-	//disable Add button
-  }
-  else
-  {
-	 populateModal(itString);
-  }
-  
-  // clicks the search results on the left
-  $(".panel-title a.srchRes").on("click", srchResClicked);
+    var itString = localStorage["itinerary"];
+    if (itString == undefined || itString == '')
+    {
+  	//disable Add button
+    }
+    else
+    {
+  	 populateModal(itString);
+    }
+    
+    // clicks the search results on the left
+    $(".panel-title a.srchRes").on("click", srchResClicked);
+  } else {
 
-/**
-      var it = {
-        itinerary0: [{1: "1"}, {2:"2"}],
-        itinerary1: [{1: "1"}, {2:"2"}],
-        itinerary2: [{1: "1"}, {2:"2"}],
-        itinerary3: [{1: "1"}, {2:"2"}],
-      };**/
+    $('#nores')[0].style.display = 'block';
 
+}
 
 };
 

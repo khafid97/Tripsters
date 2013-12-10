@@ -251,8 +251,10 @@ function deleteItClicked(){
 
 // function called when the modal Save is clicked
 function modalSaveClick(e){
+	var itList = {};
 	var itString = localStorage["itinerary"];
-	var itList = JSON.parse(itString);
+	if (itString != undefined && itString != '')
+		itList = JSON.parse(itString);
 
 	var newIt = $("#newItNameId").val();
 	newIt = newIt.replace(/ /g, "%");
@@ -318,7 +320,6 @@ function deleteVenueClicked(){
 			// expands the required itinerary
 			var divId = "#" + chosenIt;
 			$(divId).collapse('show');
-
 			$(".alert").alert("close");
 		});
 		$("#backId").bind('click', function () {
@@ -331,7 +332,10 @@ function deleteVenueClicked(){
 // function to render the Itinerary and its contents
 function renderIt(){
 	var itString = localStorage["itinerary"];
-	var itList = JSON.parse(itString);
+	var itList = [];
+	if (itString != undefined && itString != '')
+		itList = JSON.parse(itString);
+
 
 	// $.each(itList, function(itName, venueList){
 	// 	$.each(venueList, function(index, venue){
@@ -388,5 +392,11 @@ function renderIt(){
 	$(".panel-body .deleteVenue").on("click", deleteVenueClicked);
 
 	// trigger the click of the first itinerary
-	$(".panel-title a.itLink")[0].click();
+	var firstIt = $(".panel-title a.itLink");
+	if (firstIt == undefined || firstIt == [] || firstIt.length == 0 || firstIt == {}) {
+		plotSearchVenues([]);
+	}
+	else {
+		firstIt[0].click();
+	}
 }
