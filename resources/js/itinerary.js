@@ -183,7 +183,7 @@ function animate(it, index, length){
 
 // IT visualization
 function runITAnimation(){
-	var chosenIt = $(this).attr("href").split("#")[1];
+	var chosenIt = $(this).attr("itId").split("#")[1];
 
 	var itString = localStorage["itinerary"];
 	var itList = JSON.parse(itString);
@@ -199,14 +199,14 @@ function itClicked(){
 	
 	$('.highlight').removeClass('highlight');
     $(this).closest(".panel-heading").addClass('highlight');
-	var chosenIt = $(this).attr("href").split("#")[1];
+	var chosenIt = $(this).attr("itId").split("#")[1];
 	plotSearchVenues(itList[chosenIt],"false", true);
 }
 
 
 function venueClicked(){
-	var chosenIt = $(this).attr("href").split("#")[1];
-	var venueIndex = $(this).attr("href").split("#")[2];
+	var chosenIt = $(this).attr("itId").split("#")[1];
+	var venueIndex = $(this).attr("itId").split("#")[2];
 	var itString = localStorage["itinerary"];
 	var itList = JSON.parse(itString);
 	console.log("venue " + venueIndex);
@@ -214,10 +214,13 @@ function venueClicked(){
 }
 
 function deleteItClicked(){
-	var chosenIt = $(this).attr("href").split("#")[1];
+	var chosenIt = $(this).attr("itId").split("#")[1];
 	var itString = localStorage["itinerary"];
 	var itList = JSON.parse(itString);
+	console.log("delete");
+	console.log(chosenIt);
 
+	//chosenIt = chosenIt.replace(" ", "_");
 	// event fires even when we click on alert buttons
 	// so need not add again in case alert text is already appended
 	if($(this).next(".alert").length == 0){
@@ -226,6 +229,7 @@ function deleteItClicked(){
 		
 		$(".alert").alert();
 		$("#deleteId").bind('click', function () {
+			console.log("really delete");
 	  		if(delete itList[chosenIt]){
 				localStorage["itinerary"] = JSON.stringify(itList);
 				renderIt();
@@ -246,6 +250,7 @@ function modalSaveClick(e){
 	var itList = JSON.parse(itString);
 
 	var newIt = $("#newItNameId").val();
+	newIt = newIt.replace(/ /g, "%");
 	// show error in case mepty itinerary
 	if(newIt == "" || newIt == undefined || newIt == null){
 		$("#newItNameId").closest(".form-group").addClass("has-error");
@@ -286,8 +291,8 @@ function addItClicked(){
 }
 
 function deleteVenueClicked(){
-	var chosenIt = $(this).attr("href").split("#")[1];
-	var venueIndex = $(this).attr("href").split("#")[2];
+	var chosenIt = $(this).attr("itId").split("#")[1];
+	var venueIndex = $(this).attr("itId").split("#")[2];
 	// console.log(chosenIt + " " + chosenVenue);
 
 	var itString = localStorage["itinerary"];
@@ -352,12 +357,12 @@ function renderIt(){
             	for (var newIndex in liList) {
             		if(newIndex == "length")
             			break;
-            		var href = $(liList[newIndex]).find(".deleteVenue").attr("href");
+            		var href = $(liList[newIndex]).find(".deleteVenue").attr("itId");
             		var itName = href.split("#")[1];
             		var originalIndex = href.split("#")[2];
             		// update the href
-            		$(liList[newIndex]).find(".venueLink").attr("href", "#" + itName + "#" + newIndex);
-            		$(liList[newIndex]).find(".deleteVenue").attr("href", "#" + itName + "#" + newIndex);
+            		$(liList[newIndex]).find(".venueLink").attr("itId", "#" + itName + "#" + newIndex);
+            		$(liList[newIndex]).find(".deleteVenue").attr("itId", "#" + itName + "#" + newIndex);
 
             		itListNew[itName][newIndex] = itList[itName][originalIndex];
             	}

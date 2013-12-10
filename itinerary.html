@@ -64,13 +64,13 @@
           <div class="panel-heading" >
             <h4 class="panel-title">
               <div align="left">
-                <a data-toggle="collapse" data-parent="#accordion" href=<%="#" + itName%> class="itLink">
-                  <span class="glyphicon glyphicon-road"></span> <%= itName%> 
+                <a data-toggle="collapse" data-parent="#accordion" itId=<%="#" + itName%> class="itLink">
+                  <span class="glyphicon glyphicon-road"></span> <%= itName.replace(/%/g, " ")%> 
                 </a>
               </div>
               <div align="right">
-                <a href=<%="#" + itName%> class="deleteIt" ><span class="glyphicon glyphicon-trash"></span><a>
-                <a href=<%="#" + itName%> class="animateIt" ><span class="glyphicon glyphicon-transfer"></span><a>
+                <a itId=<%="#" + itName%> class="deleteIt" ><span class="glyphicon glyphicon-trash"></span><a>
+                <a itId=<%="#" + itName%> class="animateIt" ><span class="glyphicon glyphicon-transfer"></span><a>
               </div>
             </h4>
           </div>
@@ -80,8 +80,8 @@
               <% _.each(venueList, function (venue, index) { %>
                 <li class="ui-state-default"> 
                 <h5>
-                  <a href=<%="#" + itName + "#" + index%> class="venueLink"><%=venue.name%></a>
-                  <a href=<%="#" + itName + "#" + index%> class="deleteVenue" ><span class="glyphicon glyphicon-trash"></span><a>
+                  <a itId=<%="#" + itName + "#" + index%> class="venueLink"><%=venue.name%></a>
+                  <a itId=<%="#" + itName + "#" + index%> class="deleteVenue" ><span class="glyphicon glyphicon-trash"></span><a>
                 </h5>
                 </li>
               <% }); %>

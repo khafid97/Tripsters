@@ -51,6 +51,9 @@ function itModalClicked(){
 }
 
 function renderResults(reply, searchType){
+
+  $("#accordion").empty();
+
 	var name;
     var id;
     var phone;
